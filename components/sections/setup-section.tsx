@@ -1,213 +1,96 @@
 'use client'
 
-import { AnimatePresence, motion, useMotionValueEvent, useScroll, useTransform } from 'framer-motion'
-import { useRef, useState } from 'react'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { Droplet, Wind, Square, ArrowDownToLine, SquareDashed, Hand, Timer, ShieldCheck } from 'lucide-react'
+import { CheckCircle2, Zap, Target, ShieldCheck, MousePointerClick } from 'lucide-react'
 
-const STEPS = [
+const FEATURES = [
   {
-    n: '01',
-    icon: Droplet,
-    title: 'Bersihkan Layar',
-    desc: 'Lap pake wet wipe dulu buat angkat noda, lanjut dry wipe sampe kering total. Pastikan gak ada minyak atau sidik jari yang ketinggalan.',
-    duration: '45 dtk',
+    icon: Target,
+    title: 'Presisi 100%',
+    desc: 'Frame otomatis menyesuaikan posisi layar. Gak ada lagi drama tempered glass miring.'
   },
   {
-    n: '02',
-    icon: Wind,
-    title: 'Angkat Debu',
-    desc: 'Tempel dust absorber sticker ke layar — narik partikel halus yang gak keliatan tapi bisa bikin bubble pas pasang.',
-    duration: '15 dtk',
+    icon: Zap,
+    title: 'Pasang dalam Hitungan Detik',
+    desc: 'Cukup tempel, tarik, dan lepas. Selesai kurang dari 2 menit bahkan buat pemula.'
   },
   {
-    n: '03',
-    icon: Square,
-    title: 'Pasang Easy Fit Frame',
-    desc: 'Pasang frame instan ke atas HP — posisinya udah pas otomatis, no manual align. Klik bunyi "tek" tanda nempel sempurna.',
-    duration: '20 dtk',
+    icon: MousePointerClick,
+    title: 'Zero Bubbles',
+    desc: 'Teknologi adhesive otomatis membuang udara. Layar mulus tanpa gelembung.'
   },
   {
-    n: '04',
-    icon: ArrowDownToLine,
-    title: 'Tarik & Lepas',
-    desc: 'Tarik "pull out" tab di frame buat lepasin pelindung ke layar. Diamkan 20 detik biar adhesive nempel sempurna.',
-    duration: '30 dtk',
-  },
-  {
-    n: '05',
-    icon: SquareDashed,
-    title: 'Lepas Frame',
-    desc: 'Angkat frame plastik dari HP — pelindung udah terpasang presisi. Edge-to-edge gak miring sedikitpun.',
-    duration: '5 dtk',
-  },
-  {
-    n: '06',
-    icon: Hand,
-    title: 'Finishing',
-    desc: 'Ada gelembung kecil? Gosok perlahan dari tengah ke pinggir pake kartu. Bubble keluar otomatis, layar mulus.',
-    duration: '15 dtk',
-  },
+    icon: ShieldCheck,
+    title: 'Anti-Gagal Guarantee',
+    desc: 'Desain tool yang fool-proof. Siapapun bisa pasang dengan hasil kualitas pabrik.'
+  }
 ]
 
-const TOTAL = STEPS.length
-
 export function SetupSection() {
-  const ref = useRef<HTMLDivElement>(null)
-  const [activeStep, setActiveStep] = useState(0)
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start start', 'end end'],
-  })
-
-  // Active step derived from scroll progress (divided into TOTAL equal segments)
-  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
-    const idx = Math.min(TOTAL - 1, Math.max(0, Math.floor(latest * TOTAL)))
-    if (idx !== activeStep) setActiveStep(idx)
-  })
-
-  // Tool image animations — subtle rotation that progresses through steps
-  const toolRotate = useTransform(scrollYProgress, [0, 1], [-6, 6])
-  const toolY = useTransform(scrollYProgress, [0, 1], ['-4%', '4%'])
-  const glowScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.9, 1.15, 0.95])
-  const progressX = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
-
-  const step = STEPS[activeStep]
-  const StepIcon = step.icon
-
   return (
-    <section ref={ref} className="relative h-[450vh] bg-background">
-      <div className="sticky top-0 h-screen overflow-hidden flex flex-col">
-        {/* Background glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full bg-primary/5 blur-3xl pointer-events-none" />
+    <section className="relative py-24 lg:py-32 overflow-hidden bg-background">
+      {/* Background Decor */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full -mr-64 -mt-32" />
+      <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-primary/3 blur-[100px] rounded-full -ml-32 -mb-16" />
 
-        {/* HEADER — heading + progress */}
-        <div className="relative pt-20 pb-6 px-6 lg:px-12">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-8">
-              <p className="text-xs uppercase tracking-[0.3em] text-primary mb-3">Easy Fit Setup</p>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-display tracking-tight leading-[1.1]">
-                6 langkah. <span className="text-primary">Pasang sendiri.</span>
-              </h2>
+      <div className="container relative z-10 px-6 mx-auto">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+          {/* LEFT: Image Container */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="relative group"
+          >
+            <div className="absolute inset-0 bg-primary/10 blur-3xl rounded-full scale-75 group-hover:scale-90 transition-transform duration-700" />
+            <div className="relative aspect-square max-w-lg mx-auto">
+              <Image
+                src="/easyfit-tool.png"
+                alt="Ugorex Easy Fit Tool"
+                fill
+                className="object-contain drop-shadow-[0_20px_50px_rgba(220,255,80,0.3)]"
+              />
             </div>
+          </motion.div>
 
-            {/* Progress bar */}
-            <div className="max-w-xl mx-auto">
-              <div className="flex items-center justify-between mb-3">
-                <span className="font-display text-sm text-primary">{step.n}</span>
-                <span className="text-xs text-muted-foreground uppercase tracking-widest">
-                  Step {activeStep + 1} of {TOTAL}
-                </span>
-                <span className="font-display text-sm text-muted-foreground">/{String(TOTAL).padStart(2, '0')}</span>
-              </div>
-              <div className="relative h-1 bg-border rounded-full overflow-hidden">
+          {/* RIGHT: Content */}
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <p className="text-primary text-xs uppercase tracking-[0.3em] mb-4">The Setup</p>
+              <h3 className="text-4xl lg:text-6xl font-display tracking-tight leading-none mb-6">
+                Easy Fit Tool. <br />
+                <span className="text-muted-foreground/50 italic">Bye-bye ribet.</span>
+              </h3>
+              <p className="text-lg text-muted-foreground leading-relaxed mb-10 max-w-xl">
+                Lupakan cara pasang manual yang bikin tegang. Dengan <span className="text-foreground font-semibold">Easy Fit Tool</span>, kami membawa standar pemasangan pabrik langsung ke tangan Anda. Cepat, presisi, dan dijamin anti-gagal.
+              </p>
+            </motion.div>
+
+            <div className="grid sm:grid-cols-2 gap-x-8 gap-y-10">
+              {FEATURES.map((feature, idx) => (
                 <motion.div
-                  style={{ width: progressX }}
-                  className="absolute inset-y-0 left-0 bg-primary rounded-full"
-                />
-              </div>
-              {/* Step ticks */}
-              <div className="flex justify-between mt-2">
-                {STEPS.map((s, i) => (
-                  <button
-                    key={s.n}
-                    type="button"
-                    aria-label={`Step ${i + 1}`}
-                    className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                      i <= activeStep ? 'bg-primary' : 'bg-border'
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* BODY — split: image + active step content */}
-        <div className="relative flex-1 px-6 lg:px-12 overflow-hidden">
-          <div className="max-w-7xl mx-auto h-full grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            {/* LEFT — Image */}
-            <div className="relative flex items-end justify-center order-2 lg:order-1 lg:pt-24 pb-4">
-              <motion.div
-                style={{ y: toolY, rotate: toolRotate, scale: glowScale }}
-                className="relative aspect-square w-full max-w-[380px] sm:max-w-[440px]"
-              >
-                <Image
-                  src="/easyfit-tool.png"
-                  alt="Ugorex Easy Fit applicator frame"
-                  fill
-                  sizes="(min-width: 1024px) 40vw, 80vw"
-                  className="object-contain [filter:drop-shadow(0_0_60px_rgba(220,255,80,0.3))_drop-shadow(0_20px_40px_rgba(220,255,80,0.15))]"
-                  priority
-                />
-              </motion.div>
-            </div>
-
-            {/* RIGHT — Active step (animated) */}
-            <div className="relative order-1 lg:order-2 min-h-[280px] flex items-center">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={step.n}
-                  initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
-                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  exit={{ opacity: 0, y: -30, filter: 'blur(8px)' }}
-                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                  className="w-full"
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="flex flex-col gap-3"
                 >
-                  {/* Mega number background */}
-                  <div className="relative">
-                    <span
-                      className="absolute -top-12 -left-4 font-display text-[180px] sm:text-[220px] leading-none text-primary/10 select-none pointer-events-none"
-                      aria-hidden
-                    >
-                      {step.n}
-                    </span>
-
-                    <div className="relative">
-                      <div className="inline-flex items-center gap-3 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/30 mb-4">
-                        <StepIcon className="w-4 h-4 text-primary" />
-                        <span className="text-xs font-bold uppercase tracking-wider text-primary">
-                          Step {step.n}
-                        </span>
-                      </div>
-
-                      <h3 className="text-3xl sm:text-4xl lg:text-5xl font-display tracking-tight leading-[1.05] mb-4">
-                        {step.title}
-                      </h3>
-
-                      <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-md mb-6">
-                        {step.desc}
-                      </p>
-
-                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-card border border-border text-xs font-semibold">
-                        <Timer className="w-3.5 h-3.5 text-primary" />
-                        <span className="text-foreground">{step.duration}</span>
-                      </div>
-                    </div>
+                  <div className="w-11 h-11 rounded-xl bg-secondary flex items-center justify-center border border-border/50 group-hover:border-primary/50 transition-colors">
+                    <feature.icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-display font-bold text-lg mb-1">{feature.title}</h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed italic">{feature.desc}</p>
                   </div>
                 </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
-        </div>
-
-        {/* FOOTER — total time + garansi (always visible) */}
-        <div className="relative pb-8 px-6 lg:px-12">
-          <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-sm">
-            <div className="flex items-center gap-2">
-              <Timer className="w-4 h-4 text-primary" />
-              <span>
-                Total: <span className="font-display text-primary">~2 MENIT</span>
-              </span>
-            </div>
-            <div className="hidden sm:block w-px h-4 bg-border" />
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-primary" />
-              <span>
-                <span className="font-semibold">Garansi pasang</span>
-                <span className="text-muted-foreground"> · gagal? dipasangin ulang gratis</span>
-              </span>
+              ))}
             </div>
           </div>
         </div>
