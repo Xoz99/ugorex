@@ -150,3 +150,51 @@ export function formatPrice(price: number): string {
     maximumFractionDigits: 0
   }).format(price)
 }
+
+const CATEGORY_LABEL: Record<Product['category'], string> = {
+  'tempered-glass': 'Tempered Glass',
+  hydrogel: 'Hydrogel Film',
+  privacy: 'Privacy Screen',
+  matte: 'Matte / Anti-Glare',
+}
+
+export function categoryLabel(category: Product['category']): string {
+  return CATEGORY_LABEL[category]
+}
+
+// Category product photos. Categories not listed here fall back to a mockup.
+const CATEGORY_IMAGE: Partial<Record<Product['category'], string>> = {
+  'tempered-glass': '/products/tempered-glass.png',
+  hydrogel: '/products/hydrogel.png',
+  privacy: '/products/privacy.png',
+  // matte: '/products/matte.png',
+}
+
+export function productImage(product: Product): string | null {
+  return CATEGORY_IMAGE[product.category] ?? null
+}
+
+export function getProduct(id: string): Product | undefined {
+  return products.find((p) => p.id === id)
+}
+
+export function relatedProducts(product: Product, limit = 3): Product[] {
+  return products
+    .filter((p) => p.id !== product.id && p.category === product.category)
+    .concat(products.filter((p) => p.id !== product.id && p.category !== product.category))
+    .slice(0, limit)
+}
+
+export function productBlurb(product: Product): string {
+  return `${product.name} dirancang khusus untuk ${product.model}. ${categoryLabel(
+    product.category,
+  )} premium dengan ${product.features
+    .slice(0, 3)
+    .join(', ')
+    .toLowerCase()} — perlindungan maksimal tanpa mengurangi kejernihan layar dan responsivitas sentuhan.`
+}
+
+export function discountPercent(product: Product): number | null {
+  if (!product.originalPrice) return null
+  return Math.round((1 - product.price / product.originalPrice) * 100)
+}

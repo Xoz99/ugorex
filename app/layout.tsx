@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { Inter, Space_Grotesk, Bungee } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { CartProvider } from '@/lib/cart-context'
+import { AuthProvider } from '@/lib/auth-context'
+import { CartDrawer } from '@/components/cart-drawer'
 import './globals.css'
 
 const inter = Inter({
@@ -33,7 +36,12 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${inter.variable} ${spaceGrotesk.variable} ${bungee.variable} bg-background`}>
       <body className="font-sans antialiased">
-        {children}
+        <AuthProvider>
+          <CartProvider>
+            {children}
+            <CartDrawer />
+          </CartProvider>
+        </AuthProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
